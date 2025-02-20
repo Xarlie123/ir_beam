@@ -4,12 +4,13 @@ from maskapplier import MaskApplier
 from dataframemanager import TrainingDataframeManager
 from autoencodertrainer import AutoencoderTrainer
 from CNNregressor import CNNTrainer
+from DNNregressor import DNNTrainer
 
 dataset_name = 'ir_profiles_with_params'
 img_size = 64  #tamaño de la imagen y de las máscaras en píxeles, son cuadradas. img_size x img_size
 number_images_dataset = 1000
-# pattern_type="combined_sweep"
-pattern_type="scatter"
+pattern_type="combined_sweep"
+# pattern_type="scatter"
 
 #Sweep parameters
 number_steps = 16 #número de pasos utilizados para hacer las máscaras. Debe ser divisor de img_size
@@ -59,7 +60,7 @@ df_manager.visualize_dataframe_images(img_size=img_size, num_images=3)
 trainer = AutoencoderTrainer(df_training, img_size=img_size, batch_size=16, learning_rate=0.001)
 
 # Entrenar el modelo
-trainer.train(num_epochs=100)
+trainer.train(num_epochs=30)
 
 # Guardar el modelo
 trainer.save_model("autoencoder_denoising.pth")
@@ -76,7 +77,7 @@ trainer.test_and_plot_results()
 trainer = CNNTrainer(df_training, img_size=img_size, batch_size=16, learning_rate=0.001)
 
 # Entrenar el modelo
-trainer.train(num_epochs=100)
+trainer.train(num_epochs=30)
 
 # Guardar el modelo
 trainer.save_model("cnn_regressor.pth")
@@ -86,3 +87,20 @@ trainer.load_model("cnn_regressor.pth")
 
 # Evaluar y graficar resultados en el set de test
 trainer.test(num_images = 2)
+
+## Crear modelo con DNN para inferir los parámetros y entrenarlo
+
+# # Crear el objeto de entrenamiento
+# trainer = DNNTrainer(df_training, img_size=img_size, batch_size=16, learning_rate=0.001)
+#
+# # Entrenar el modelo
+# trainer.train(num_epochs=25)
+#
+# # Guardar el modelo
+# trainer.save_model("dnn_regressor.pth")
+#
+# # Cargar el modelo (si es necesario en otro momento)
+# trainer.load_model("dnn_regressor.pth")
+#
+# # Evaluar y graficar resultados en el set de test
+# trainer.test(num_images = 2)
